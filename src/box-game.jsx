@@ -9,6 +9,8 @@ const BoxMain = () => {
     const [gameResult, setGameResult] = useState(null);
     const [activeBox, setActiveBox] = useState(null);
     const [showInstructions, setShowInstructions] = useState(true);
+    const [boxTime, setBoxTime] = useState(1000);
+    const speed = [1000, 700, 400, 200];
 
     const [boxes, setBoxes] = useState({
         1: 'bg-gray-200',
@@ -35,7 +37,7 @@ const BoxMain = () => {
                     setIsDisplayingSequence(false);
                     setIsGameActive(true);
                 }
-            }, 1000);
+            }, boxTime);
         }
     }, [isDisplayingSequence, sequence]);
 
@@ -96,23 +98,40 @@ const BoxMain = () => {
                 </div>
             )}
             <h1 className="text-4xl font-bold mb-8">Box Mind Game</h1>
+
             <div className="grid grid-cols-3 gap-4 mb-4">
                 {Object.keys(boxes).map((boxNumber) => (
                     <div
                         key={boxNumber}
-                        className={`w-20 h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 rounded cursor-pointer transition-colors duration-200 ${activeBox == boxNumber ? 'bg-blue-500' : boxes[boxNumber]
-                            }`}
+                        className={`w-20 h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 rounded cursor-pointer transition-colors duration-200 ${activeBox == boxNumber ? 'bg-blue-500' : boxes[boxNumber]}`}
                         onClick={() => handleBoxClick(Number(boxNumber))}
                     />
                 ))}
             </div>
-            <input
-                type="number"
-                value={iteration}
-                onChange={(e) => setIteration(Math.max(1, Number(e.target.value)))}
-                className="w-20 h-8 pl-2 mb-4 border border-gray-400 rounded bg-gray-800 text-white"
-                min="1"
-            />
+
+            <div className="flex items-center space-x-4 mb-4">
+                <label className="text-lg">Iterations:</label>
+                <input
+                    type="number"
+                    value={iteration}
+                    onChange={(e) => setIteration(Math.max(1, Number(e.target.value)))}
+                    className="w-20 h-8 pl-2 border border-gray-400 rounded bg-gray-800 text-white"
+                    min="1"
+                />
+
+                <label className="text-lg">Speed:</label>
+                <select
+                    className="w-20 h-8 pl-2 border border-gray-400 rounded bg-gray-800 text-white"
+                    onChange={(e) => setBoxTime(e.target.value)}
+                >
+                    {speed.map((curSpeed, index) => (
+                        <option key={index} value={curSpeed}>
+                            {curSpeed}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
             <button
                 className="w-32 h-12 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white rounded-full transition-all duration-200 transform hover:scale-105"
                 onClick={handleStart}
@@ -120,6 +139,7 @@ const BoxMain = () => {
             >
                 Start
             </button>
+
             {gameResult && (
                 <div className={`mt-4 p-2 rounded ${gameResult === 'won' ? 'bg-green-500' : 'bg-red-500'}`}>
                     {gameResult === 'won' ? 'You won the game!' : 'You lost the game!'}
