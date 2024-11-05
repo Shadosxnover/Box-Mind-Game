@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Plus, Minus } from 'lucide-react';
 
 const BoxMain = () => {
     const [iteration, setIteration] = useState(3);
@@ -44,6 +45,14 @@ const BoxMain = () => {
     const highlightBox = (boxNumber) => {
         setActiveBox(boxNumber);
         setTimeout(() => setActiveBox(null), 500);
+    };
+
+    const handleIncrement = () => {
+        setIteration(prev => Math.min(prev + 1, 10));
+    };
+
+    const handleDecrement = () => {
+        setIteration(prev => Math.max(prev - 1, 1));
     };
 
     const handleStart = () => {
@@ -109,16 +118,28 @@ const BoxMain = () => {
                 ))}
             </div>
 
-            <div className="flex items-center space-x-4 mb-4">
-                <label className="text-lg">Iterations:</label>
-                <input
-                    type="number"
-                    value={iteration}
-                    onChange={(e) => setIteration(Math.max(1, Number(e.target.value)))}
-                    className="w-20 h-8 pl-2 border border-gray-400 rounded bg-gray-800 text-white"
-                    min="1"
-                />
+            <div className="flex mt-4 items-center gap-2 sm:gap-4">
+                <button
+                    onClick={handleDecrement}
+                    className="bg-gray-700 hover:bg-gray-600 text-white rounded-lg p-1.5 sm:p-2 transition-colors"
+                    disabled={iteration <= 1}
+                >
+                    <Minus size={20} />
+                </button>
+                <div className="flex flex-col items-center min-w-[80px] sm:min-w-[100px]">
+                    <div className="text-sm sm:text-lg font-semibold text-gray-300">Iterations</div>
+                    <div className="text-xl sm:text-2xl font-bold text-blue-400">{iteration}</div>
+                </div>
+                <button
+                    onClick={handleIncrement}
+                    className="bg-gray-700 hover:bg-gray-600 text-white rounded-lg p-1.5 sm:p-2 transition-colors"
+                    disabled={iteration >= 10}
+                >
+                    <Plus size={20} />
+                </button>
+            </div>
 
+            <div className="flex items-center space-x-4 mb-4">
                 <label className="text-lg">Speed:</label>
                 <select
                     className="w-20 h-8 pl-2 border border-gray-400 rounded bg-gray-800 text-white"
@@ -133,16 +154,15 @@ const BoxMain = () => {
             </div>
 
             <button
-                className="w-32 h-12 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white rounded-full transition-all duration-200 transform hover:scale-105"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
                 onClick={handleStart}
-                disabled={isDisplayingSequence}
             >
-                Start
+                Start Game
             </button>
 
             {gameResult && (
-                <div className={`mt-4 p-2 rounded ${gameResult === 'won' ? 'bg-green-500' : 'bg-red-500'}`}>
-                    {gameResult === 'won' ? 'You won the game!' : 'You lost the game!'}
+                <div className={`mt-6 text-xl font-bold ${gameResult === 'won' ? 'text-green-500' : 'text-red-500'}`}>
+                    {gameResult === 'won' ? 'Congratulations! You won!' : 'Oops! You lost!'}
                 </div>
             )}
         </div>
